@@ -1,0 +1,48 @@
+html, body {
+    height: 100%;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+
+/* Set the flexbox and layout */
+body{
+    display: flex;
+    flex-direction: column;
+}
+
+.header{
+    height: 75px;
+    background: #239875;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.main{
+    flex: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    background-color: rgb(164,224,219);
+}
+
+.game-box{
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    justify-content: space-around;
+}
+
+.button-box{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+.footer{
+    height: 30px;
+    background-color: #239875
+}
+
