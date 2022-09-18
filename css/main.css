@@ -8,7 +8,7 @@ html, body {
 /* Intro Screen  */
 .intro-screen{
     flex: auto;
-    display: flex;
+    display: none;
     flex-direction: column;
     align-items: center;
     justify-content: space-around;
@@ -48,7 +48,7 @@ body{
 
 .main{
     flex: auto;
-    display: none;
+    display: flex;
     flex-direction: column;
     justify-content: space-around;
     background-color: rgb(164,224,219);
@@ -59,6 +59,24 @@ body{
     flex-direction: row;
     align-content: center;
     justify-content: space-around;
+}
+
+.board{
+    display: flex;
+    width: 70vh;
+    height: 70vh;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.board-tile{
+    outline: 1px solid red;
+    width: fit-content;
+    height: fit-content;
+    min-height: 20%;
+    min-width: 20%;
 }
 
 .button-box{
