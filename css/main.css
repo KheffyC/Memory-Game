@@ -94,3 +94,11 @@ body{
     background-color: #239875
 }
 
+.timer, .guesses, .correct-choice{
+    font-size: x-large;
+    font-weight: 600;
+}
+
+.chosen{
+    background-color: blue;
+}

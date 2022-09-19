@@ -24,15 +24,15 @@ const boardLevels = [
 let levelFinder, boardAdjuster
 
 
-
 /*----- cached element references -----*/
 const startButton = document.querySelector(".start-button");
 const introScreen = document.querySelector(".intro-screen");
 const mainScreen = document.querySelector(".main");
 const board = document.querySelector(".board");
 const dropdown = document.querySelector(".levels");
-
-
+const guesses = document.querySelector(".guesses span")
+const totalTiles = document.querySelector(".total-tiles")
+const totalCorrect = document.querySelector(".correct-choice > span")
 
 /*----- event listeners -----*/
 startButton.addEventListener('click', handleStartButton)
@@ -52,6 +52,9 @@ function handleStartButton(){
 function init(){
     createBoard()
     chosenTiles()
+    guesses.innerText = boardAdjuster['maxGuesses'] 
+    totalCorrect.innerText = 0
+
 }
 
 function changeLevels(){
@@ -87,5 +90,13 @@ function chosenTiles(){
         chosenTileArr.push(Math.floor(Math.random() * tileMax))
         i;
     }
-    chosenTileArr.forEach(tile => document.getElementById(`${tile}`).style.backgroundColor = "blue")
+    
+    // remove all repeated random numbers
+    let totalTilesChosen = [...new Set(chosenTileArr)]
+    
+    // update DOM with number of chosen tiles
+    totalTiles.innerText = totalTilesChosen.length
+
+    // add 'chosen' class to tile corresponding with number === id
+    chosenTileArr.forEach(tile => document.getElementById(`${tile}`).classList.add('chosen'))
 }
