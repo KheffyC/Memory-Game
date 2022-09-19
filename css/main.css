@@ -8,15 +8,21 @@ html, body {
 /* Intro Screen  */
 .intro-screen{
     flex: auto;
-    display: none;
+    display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-around;
 }
 
+.intro-screen > select{
+    width: 40vh;
+    font-size: large;
+}
+
 .intro-screen > button{
     padding: 20px;
     width: 300px;
+    visibility: hidden;
 }
 
 .instructions{
@@ -48,7 +54,7 @@ body{
 
 .main{
     flex: auto;
-    display: flex;
+    display: none;
     flex-direction: column;
     justify-content: space-around;
     background-color: rgb(164,224,219);
@@ -72,11 +78,9 @@ body{
 }
 
 .board-tile{
-    outline: 1px solid red;
+    outline: 1.5px solid black;
     width: fit-content;
     height: fit-content;
-    min-height: 20%;
-    min-width: 20%;
 }
 
 .button-box{
