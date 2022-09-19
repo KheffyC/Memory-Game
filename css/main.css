@@ -83,6 +83,14 @@ body{
     height: fit-content;
 }
 
+.chosen{
+    background-color: blue;
+}
+
+.z-tile{
+    background-color: rgb(154, 153, 153);
+}
+
 .button-box{
     display: flex;
     flex-direction: row;
@@ -94,11 +102,9 @@ body{
     background-color: #239875
 }
 
-.timer, .guesses, .correct-choice{
+.timer, .guesses, .correct-choice, .countdown-timer{
     font-size: x-large;
     font-weight: 600;
 }
 
-.chosen{
-    background-color: blue;
-}
+

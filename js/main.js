@@ -21,7 +21,7 @@ const boardLevels = [
 
 
 /*----- app's state (variables) -----*/
-let levelFinder, boardAdjuster
+let levelFinder, boardAdjuster, boardTiles
 
 
 /*----- cached element references -----*/
@@ -33,6 +33,7 @@ const dropdown = document.querySelector(".levels");
 const guesses = document.querySelector(".guesses span")
 const totalTiles = document.querySelector(".total-tiles")
 const totalCorrect = document.querySelector(".correct-choice > span")
+const countdownTimer = document.querySelector(".countdown-timer")
 
 /*----- event listeners -----*/
 startButton.addEventListener('click', handleStartButton)
@@ -54,7 +55,7 @@ function init(){
     chosenTiles()
     guesses.innerText = boardAdjuster['maxGuesses'] 
     totalCorrect.innerText = 0
-
+    countdown(3)
 }
 
 function changeLevels(){
@@ -73,13 +74,14 @@ function createBoard(){
     // create board tiles
     let mulitplyTilesArr = new Array(boardAdjuster[`${levelFinder}`] * boardAdjuster[`${levelFinder}`])
     for (let i = 0; i < mulitplyTilesArr.length; i++){
-        let newTile = document.createElement('div');
+        newTile = document.createElement('div');
         newTile.id = i;
         newTile.className = "board-tile";
         newTile.style.minHeight = `${boardAdjuster['min-size']}%`
         newTile.style.minWidth = `${boardAdjuster['min-size']}%`
         board.appendChild(newTile)
     }
+    console.log(board, "board")
 }
 
 function chosenTiles(){
@@ -99,4 +101,26 @@ function chosenTiles(){
 
     // add 'chosen' class to tile corresponding with number === id
     chosenTileArr.forEach(tile => document.getElementById(`${tile}`).classList.add('chosen'))
+}
+
+function countdown(seconds){
+    countdownTimer.showModal();
+    countdownTimer.innerText = "READY"
+    let timerID = setInterval(function(){
+        countdownTimer.innerText = seconds
+        seconds--;
+        if (seconds < 0){
+            countdownTimer.innerText = "Go!"
+            clearInterval(timerID);
+            countdownTimer.close();
+            addZTile(board);
+            return
+        }
+    }, 1000)
+}
+
+function addZTile(element){
+    for(let i=0; i < element.children.length; i++){
+        element.children[i].classList.add("z-tile")
+    }
 }
