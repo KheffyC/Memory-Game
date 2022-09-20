@@ -17,6 +17,18 @@ const boardLevels = [
         'min-size': 16,
         'maxGuesses': 16,
         'level': 'hard'
+    },
+    {
+        'boardSize': 7,
+        'min-size': 14.2,
+        'maxGuesses': 24,
+        'level': 'hardest'
+    },
+    {
+        'boardSize': 8,
+        'min-size': 12.5,
+        'maxGuesses': 30,
+        'level': 'hardest'
     }
 ]
 
@@ -26,7 +38,7 @@ const boardLevels = [
 /*----- app's state (variables) -----*/
 let levelFinder, nextLevel, boardAdjuster, guessCount, totalTileDenominator, countdownTimerID, timeoutID
 let correctChoice = 0
-
+let score = 0;
 
 
 /*----- cached element references -----*/
@@ -44,6 +56,7 @@ const gameTimer = document.querySelector(".timer > span")
 const resultModal = document.querySelector(".win-lose") 
 const tryAgainButton = document.querySelector(".try-again");
 const nextLevelButton = document.querySelector(".next-level")
+const playerScore = document.querySelector(".header-score span")
 
 
 
@@ -106,7 +119,7 @@ function handleTryAgain(){
 }
 
 function handleNextLevel(){
-    num === 2 ? num = 0 : num += 1;
+    num === 4 ? num = 0 : num += 1;
     board.replaceChildren()
     clearInterval(timeoutID)
     correctChoice = 0
@@ -122,6 +135,7 @@ function init(){
     guesses.innerHTML = `${guessCount}`
     gameTimer.innerHTML = '00 : 15'
     totalCorrect.innerHTML = 0
+    playerScore.innerText = `${score}`
     countdown(3)
 }
 
@@ -140,6 +154,10 @@ function handleDropdown(){
         num = 1
      } else if (dropdown.value === 'hard'){
         num = 2
+     } else if (dropdown.value === 'hardest'){
+        num = 3
+     } else if (dropdown.value === 'impossible'){
+        num = 4
      }
      boardAdjuster = boardLevels[num]
 }
@@ -183,7 +201,6 @@ function countdown(seconds){
         countdownTimer.innerText = seconds
         seconds--;
         if (seconds < 0){
-            countdownTimer.innerText = "Go!"
             clearInterval(countdownTimerID);
             countdownTimer.close();
             addZTile(board);
@@ -226,6 +243,8 @@ function removeZTile(element){
 function checkWin(){
     // Wins
     if(correctChoice === totalTileDenominator){
+        score += 1
+        playerScore.innerText = `${score}`
         resultModal.showModal()
         resultModal.style.display = "flex"
         resultModal.innerHTML = `<h2>You WIN! You had ${guessCount === 1 ?  guessCount + ' guess ' : guessCount + ' guesses ' }left too! </h2><h3> Time remaining : ${gameTimer.innerHTML}</h3>`

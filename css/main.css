@@ -106,8 +106,12 @@ body{
 .timer, .guesses, .correct-choice, .countdown-timer{
     font-size: x-large;
     font-weight: 600;
-    width: 200px;
+    width: 100px;
     text-align: center;
+}
+
+.countdown-timer{
+    opacity: 0.85;
 }
 
 .win-lose{
