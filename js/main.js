@@ -1,19 +1,22 @@
 /*----- constants -----*/
 const boardLevels = [
     {
-        'easy': 4,
+        'boardSize': 4,
         'min-size': 25,
-        'maxGuesses': 6
+        'maxGuesses': 6,
+        'level': 'easy'
     },
     {
-        'medium': 5,
+        'boardSize': 5,
         'min-size': 20,
-        'maxGuesses': 10
+        'maxGuesses': 10,
+        'level': 'medium'
     },
     {
-        'hard': 6,
+        'boardSize': 6,
         'min-size': 16,
-        'maxGuesses': 16
+        'maxGuesses': 16,
+        'level': 'hard'
     }
 ]
 
@@ -21,7 +24,7 @@ const boardLevels = [
 
 
 /*----- app's state (variables) -----*/
-let levelFinder, boardAdjuster, guessCount, totalTileDenominator
+let levelFinder, nextLevel, boardAdjuster, guessCount, totalTileDenominator, countdownTimerID, timeoutID
 let correctChoice = 0
 
 
@@ -32,19 +35,25 @@ const introScreen = document.querySelector(".intro-screen");
 const mainScreen = document.querySelector(".main");
 const board = document.querySelector(".board");
 const dropdown = document.querySelector(".levels");
+const selectedDropdown = document.querySelector(".levels:checked")
 const guesses = document.querySelector(".guesses span")
 const totalTiles = document.querySelector(".total-tiles")
 const totalCorrect = document.querySelector(".correct-choice > span")
 const countdownTimer = document.querySelector(".countdown-timer")
 const gameTimer = document.querySelector(".timer > span")
 const resultModal = document.querySelector(".win-lose") 
+const tryAgainButton = document.querySelector(".try-again");
+const nextLevelButton = document.querySelector(".next-level")
+
 
 
 /*----- event listeners -----*/
 startButton.addEventListener('click', handleStartButton)
-dropdown.addEventListener('change', changeLevels)
+dropdown.addEventListener('change', handleDropdown)
 board.addEventListener('click', handlePlayerClick)
 resultModal.addEventListener('click', handleModal)
+tryAgainButton.addEventListener('click', handleTryAgain)
+nextLevelButton.addEventListener('click', handleNextLevel)
 
 
 /*----- functions -----*/
@@ -84,10 +93,27 @@ function handleModal(e){
     if(e.target != document.querySelector("dialog")){
         resultModal.style.display = "none"
         resultModal.close()
-        gameTimer.innerText = ""
+        clearInterval(timeoutID)
     }
 }
 
+function handleTryAgain(){
+    board.replaceChildren()
+    clearInterval(timeoutID)
+    correctChoice = 0
+    init()
+    render()
+}
+
+function handleNextLevel(){
+    num === 2 ? num = 0 : num += 1;
+    board.replaceChildren()
+    clearInterval(timeoutID)
+    correctChoice = 0
+    boardAdjuster = boardLevels[num]
+    init()
+    render()
+}
 
 function init(){
     createBoard()
@@ -106,21 +132,21 @@ function render(){
     checkWin()
 }
 
-function changeLevels(){
-     levelFinder = dropdown.value;
+function handleDropdown(){
      startButton.style.visibility = "visible"
      if(dropdown.value === 'easy'){
-        boardAdjuster = boardLevels[0]
+        num = 0
      } else if (dropdown.value === 'medium'){
-        boardAdjuster = boardLevels[1]
+        num = 1
      } else if (dropdown.value === 'hard'){
-        boardAdjuster = boardLevels[2]
+        num = 2
      }
+     boardAdjuster = boardLevels[num]
 }
 
 function createBoard(){
     // create board tiles
-    let mulitplyTilesArr = new Array(boardAdjuster[`${levelFinder}`] * boardAdjuster[`${levelFinder}`])
+    let mulitplyTilesArr = new Array(boardAdjuster['boardSize'] * boardAdjuster['boardSize'])
     for (let i = 0; i < mulitplyTilesArr.length; i++){
         newTile = document.createElement('div');
         newTile.id = i;
@@ -133,7 +159,7 @@ function createBoard(){
 
 function chosenTiles(){
     let memoryTile = boardAdjuster['maxGuesses']
-    let tileMax = boardAdjuster[`${dropdown.value}`] * boardAdjuster[`${dropdown.value}`]
+    let tileMax = boardAdjuster['boardSize'] * boardAdjuster['boardSize']
     let chosenTileArr = []
     for (let i=0; i < memoryTile; i++){
         chosenTileArr.push(Math.floor(Math.random() * tileMax))
@@ -153,12 +179,12 @@ function chosenTiles(){
 function countdown(seconds){
     countdownTimer.showModal();
     countdownTimer.innerText = "READY"
-    let timerID = setInterval(function(){
+    countdownTimerID = setInterval(function(){
         countdownTimer.innerText = seconds
         seconds--;
         if (seconds < 0){
             countdownTimer.innerText = "Go!"
-            clearInterval(timerID);
+            clearInterval(countdownTimerID);
             countdownTimer.close();
             addZTile(board);
             timer(14);
@@ -168,23 +194,18 @@ function countdown(seconds){
 }
 
 function timer(seconds){
-    let timerID = setInterval(function(){
-        if(gameTimer.innerText === ""){
-            return
-        }
+    timeoutID = setInterval(function(){
         if (resultModal.hasAttribute("open")){
-            return
+            clearInterval(timeoutID)
         } else {
             gameTimer.innerHTML = `00 : ${seconds >= 10  ? seconds : '0' + seconds}` 
             seconds--;
             if (seconds < 0){
-                clearInterval(timerID);
-                countdownTimer.close();
+                clearInterval(timeoutID);
                 gameTimer.innerHTML = '00 : 00'
 
                 // only checkWin() if player hasnt lost yet
                 if(!resultModal.hasAttribute("open")) checkWin();
-                return
             }
         }
     }, 1000)
