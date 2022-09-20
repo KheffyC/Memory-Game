@@ -64,7 +64,7 @@ body{
     display: flex;
     flex-direction: row;
     align-content: center;
-    justify-content: space-around;
+    justify-content: center;
 }
 
 .board{
@@ -106,8 +106,28 @@ body{
 .timer, .guesses, .correct-choice, .countdown-timer{
     font-size: x-large;
     font-weight: 600;
-    width: 160px;
+    width: 200px;
     text-align: center;
+}
+
+.win-lose{
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.close{  
+    color: red;
+    align-self: start;
+    margin-left: 10px;
+    font-size: x-small;
+    cursor: pointer;
+    border: 1.5px solid red;
+    padding: 0px 10px;
+}
+
+.close:hover{
+    border: 1px solid red;  
 }
 
 

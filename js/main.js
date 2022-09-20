@@ -21,7 +21,7 @@ const boardLevels = [
 
 
 /*----- app's state (variables) -----*/
-let levelFinder, boardAdjuster, boardTiles, guessCount, totalTileDenominator
+let levelFinder, boardAdjuster, guessCount, totalTileDenominator
 let correctChoice = 0
 
 
@@ -44,7 +44,7 @@ const resultModal = document.querySelector(".win-lose")
 startButton.addEventListener('click', handleStartButton)
 dropdown.addEventListener('change', changeLevels)
 board.addEventListener('click', handlePlayerClick)
-
+resultModal.addEventListener('click', handleModal)
 
 
 /*----- functions -----*/
@@ -68,7 +68,8 @@ function handlePlayerClick(e){
     // remove z-tile and update guesses/correct answers 
 
     if(list.contains("chosen") && list.contains("z-tile")){
-        e.target.style.backgroundColor = "purple"
+        // e.target.style.backgroundColor = "purple"
+        list.remove("z-tile")
         correctChoice += 1
         guessCount -= 1
         render()
@@ -79,6 +80,15 @@ function handlePlayerClick(e){
     }
 }
 
+function handleModal(e){
+    if(e.target != document.querySelector("dialog")){
+        resultModal.style.display = "none"
+        resultModal.close()
+        gameTimer.innerText = ""
+    }
+}
+
+
 function init(){
     createBoard()
     chosenTiles()
@@ -88,6 +98,7 @@ function init(){
     totalCorrect.innerHTML = 0
     countdown(3)
 }
+
 
 function render(){
     totalCorrect.innerHTML = `${correctChoice}`
@@ -158,6 +169,9 @@ function countdown(seconds){
 
 function timer(seconds){
     let timerID = setInterval(function(){
+        if(gameTimer.innerText === ""){
+            return
+        }
         if (resultModal.hasAttribute("open")){
             return
         } else {
@@ -192,23 +206,18 @@ function checkWin(){
     // Wins
     if(correctChoice === totalTileDenominator){
         resultModal.showModal()
-        resultModal.innerHTML = `<h2>You WIN! You had ${guessCount === 1 ?  guessCount + ' guess ' : guessCount + ' guesses ' }left too! </h2><br> <h3> Time remaining : ${gameTimer.innerHTML}</h3>`
+        resultModal.style.display = "flex"
+        resultModal.innerHTML = `<h2>You WIN! You had ${guessCount === 1 ?  guessCount + ' guess ' : guessCount + ' guesses ' }left too! </h2><h3> Time remaining : ${gameTimer.innerHTML}</h3>`
         removeZTile(board)
         return
     }
     // Losses 
-    if(guessCount === 0 && correctChoice !== totalTileDenominator){
+    if((guessCount === 0 && correctChoice !== totalTileDenominator) || gameTimer.innerHTML === '00 : 00'){
         resultModal.showModal()
+        resultModal.style.display = "flex"
         resultModal.innerHTML = `<h2>You Lose!</h2>`;
         removeZTile(board)
         return
     }
-    if(gameTimer.innerHTML === '00 : 00'){
-        resultModal.showModal()
-        resultModal.innerHTML = `<h2>You Lose!</h2>`
-        removeZTile(board)
-        return
-    }
-
 }
 
