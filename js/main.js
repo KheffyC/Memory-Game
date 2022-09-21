@@ -33,8 +33,6 @@ const boardLevels = [
 ]
 
 
-
-
 /*----- app's state (variables) -----*/
 let levelFinder, nextLevel, boardAdjuster, guessCount, totalTileDenominator, countdownTimerID, timeoutID
 let correctChoice = 0
@@ -42,59 +40,51 @@ let score = 0
 
 
 /*----- cached element references -----*/
-const startButton = document.querySelector(".start-button");
-const introScreen = document.querySelector(".intro-screen");
-const enterName = document.querySelector(".enter-name input");
-const difficulty = document.querySelector(".difficulty");
-const mainScreen = document.querySelector(".main");
 const board = document.querySelector(".board");
-const dropdown = document.querySelector(".levels");
-const selectedDropdown = document.querySelector(".levels:checked");
 const guesses = document.querySelector(".guesses span");
 const totalTiles = document.querySelector(".total-tiles");
 const totalCorrect = document.querySelector(".correct-choice > span");
 const countdownTimer = document.querySelector(".countdown-timer");
 const gameTimer = document.querySelector(".timer > span");
 const resultModal = document.querySelector(".win-lose"); 
-const tryAgainButton = document.querySelector(".try-again");
 const nextLevelButton = document.querySelector(".next-level");
 const playerScore = document.querySelector(".header-score span");
-const playerName = document.querySelector(".header > p span");
-const level = document.querySelector(".level");
-
 
 
 /*----- event listeners -----*/
-startButton.addEventListener('click', handleStartButton)
-enterName.addEventListener('change', handleName)
-dropdown.addEventListener('change', handleDropdown)
+document.querySelector(".start-button").addEventListener('click', handleStartButton)
+document.querySelector(".enter-name input").addEventListener('change', handleName)
+document.querySelector(".levels").addEventListener('change', handleDropdown)
 board.addEventListener('click', handlePlayerClick)
 resultModal.addEventListener('click', handleModal)
-tryAgainButton.addEventListener('click', handleTryAgain)
+document.querySelector(".try-again").addEventListener('click', handleTryAgain)
 nextLevelButton.addEventListener('click', handleNextLevel)
 
 
 /*----- functions -----*/
 
- // all handle functions
-
+ // handle functions
 function handleStartButton(){
-    introScreen.style.display = 'none'
-    mainScreen.style.display = 'flex'
+    // hide intro screen and reveal main game page
+    document.querySelector(".intro-screen").style.display = 'none'
+    document.querySelector(".main").style.display = 'flex'
     document.querySelector('.header p').style.display = 'block'
     document.querySelector('.header-score').style.display = 'block'
     init()
 }
 
 function handleName(e){
-    playerName.innerHTML = `<strong>${e.target.value}</strong>`
-    enterName.disabled = true
-    difficulty.style.visibility = "visible"
+    // update player name
+    document.querySelector(".header > p span").innerHTML = `<strong>${e.target.value}</strong>`
+
+    // lock in player name and reveal level selector
+    document.querySelector(".enter-name input").disabled = true
+    document.querySelector(".difficulty").style.visibility = "visible"
 }
 
 function handleDropdown(){
-     startButton.style.visibility = "visible"
-     switch(dropdown.value){
+    document.querySelector(".start-button").style.visibility = "visible"
+    switch(document.querySelector(".levels").value){
         case 'easy':
             num = 0;
             break;
@@ -110,16 +100,16 @@ function handleDropdown(){
         case 'impossible':
             num = 4;
             break;
-     }
-     boardAdjuster = boardLevels[num]
-     dropdown.disabled = true
+    }
+    boardAdjuster = boardLevels[num]
+    document.querySelector(".levels").disabled = true
 }
 
 function handlePlayerClick(e){
     e.preventDefault()
     let list = e.target.classList;
     
-    // return statements
+    // return statements for when game is over
     if (guessCount === 0) return
     if(!list.contains("z-tile")) return
 
@@ -174,7 +164,6 @@ function handleNextLevel(){
 }
 
  // functions for initialization
-
 function init(){
     createBoard()
     chosenTiles()
@@ -182,7 +171,7 @@ function init(){
     guesses.innerHTML = `${guessCount}`
     gameTimer.innerHTML = '00 : 15'
     totalCorrect.innerHTML = 0
-    level.innerHTML = `<p>Level <br>${num} <br> (${boardAdjuster.level.toUpperCase()})</p>`
+    document.querySelector(".level").innerHTML = `<p>Level <br>${num} <br> (${boardAdjuster.level.toUpperCase()})</p>`
     playerScore.innerText = `${score}`
     countdown(3)
 }
@@ -201,6 +190,7 @@ function createBoard(){
 }
 
 function chosenTiles(){
+    // max amount of chosen tiles cannot be more than amount of maxGuesses
     let memoryTile = boardAdjuster['maxGuesses']
     let tileMax = boardAdjuster['boardSize'] * boardAdjuster['boardSize']
     let chosenTileArr = []
@@ -212,6 +202,7 @@ function chosenTiles(){
     // remove all repeated random numbers
     let totalTilesChosen = [...new Set(chosenTileArr)]
     totalTileDenominator = totalTilesChosen.length
+
     // update DOM with number of chosen tiles
     totalTiles.innerHTML = `${totalTileDenominator}`
 
@@ -236,7 +227,6 @@ function countdown(seconds){
 }
 
  // functions for updating state 
-
 function timer(seconds){
     timeoutID = setInterval(function(){
         if (resultModal.hasAttribute("open")){
@@ -297,12 +287,14 @@ function checkWin(){
 }
 
 function removeZTile(element){
+    // remove all zTiles for end of game analysis
     for(let i=0; i < element.children.length; i++){
         element.children[i].classList.remove("z-tile")
     }
 }
 
 function showRemainderTiles(){
+    // add class to remaining tiles for added animation effect
     for(let child of board.children){
         if(child.classList.contains("chosen") && !child.classList.contains("correct")){
             child.classList.add("remaining-tiles")
