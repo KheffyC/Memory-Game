@@ -38,7 +38,7 @@ const boardLevels = [
 /*----- app's state (variables) -----*/
 let levelFinder, nextLevel, boardAdjuster, guessCount, totalTileDenominator, countdownTimerID, timeoutID
 let correctChoice = 0
-let score = 0;
+let score = 0
 
 
 /*----- cached element references -----*/
@@ -59,8 +59,8 @@ const resultModal = document.querySelector(".win-lose");
 const tryAgainButton = document.querySelector(".try-again");
 const nextLevelButton = document.querySelector(".next-level");
 const playerScore = document.querySelector(".header-score span");
-const playerName = document.querySelector(".header > p span")
-const level = document.querySelector(".level")
+const playerName = document.querySelector(".header > p span");
+const level = document.querySelector(".level");
 
 
 
@@ -75,11 +75,8 @@ nextLevelButton.addEventListener('click', handleNextLevel)
 
 
 /*----- functions -----*/
-function handleName(e){
-    playerName.innerHTML = `<strong>${e.target.value}</strong>`
-    enterName.disabled = true
-    difficulty.style.visibility = "visible"
-}
+
+ // all handle functions
 
 function handleStartButton(){
     introScreen.style.display = 'none'
@@ -89,8 +86,31 @@ function handleStartButton(){
     init()
 }
 
+function handleName(e){
+    playerName.innerHTML = `<strong>${e.target.value}</strong>`
+    enterName.disabled = true
+    difficulty.style.visibility = "visible"
+}
+
+function handleDropdown(){
+     startButton.style.visibility = "visible"
+     if(dropdown.value === 'easy'){
+        num = 0
+     } else if (dropdown.value === 'medium'){
+        num = 1
+     } else if (dropdown.value === 'hard'){
+        num = 2
+     } else if (dropdown.value === 'hardest'){
+        num = 3
+     } else if (dropdown.value === 'impossible'){
+        num = 4
+     }
+     boardAdjuster = boardLevels[num]
+     dropdown.disabled = true
+}
+
 function handlePlayerClick(e){
-    e.preventDefault();
+    e.preventDefault()
     let list = e.target.classList;
     
     // return statements
@@ -129,17 +149,24 @@ function handleTryAgain(){
 }
 
 function handleNextLevel(){
-    num === 4 ? num = 0 : num += 1;
+    // loop levels back to the beginning 
+    num === 4 ? num = 0 : num += 1
+
+    //clear board
     board.replaceChildren()
     clearInterval(timeoutID)
     correctChoice = 0
     boardAdjuster = boardLevels[num]
+
+    // return nextLevelButton to disabled
     nextLevelButton.disabled = true
     nextLevelButton.style.opacity = "0.5"
     nextLevelButton.classList.remove("flashing")
     init()
     render()
 }
+
+ // functions for initialization
 
 function init(){
     createBoard()
@@ -153,37 +180,13 @@ function init(){
     countdown(3)
 }
 
-
-function render(){
-    totalCorrect.innerHTML = `${correctChoice}`
-    guesses.innerHTML = `${guessCount}`
-    checkWin()
-}
-
-function handleDropdown(){
-     startButton.style.visibility = "visible"
-     if(dropdown.value === 'easy'){
-        num = 0
-     } else if (dropdown.value === 'medium'){
-        num = 1
-     } else if (dropdown.value === 'hard'){
-        num = 2
-     } else if (dropdown.value === 'hardest'){
-        num = 3
-     } else if (dropdown.value === 'impossible'){
-        num = 4
-     }
-     boardAdjuster = boardLevels[num]
-     dropdown.disabled = true
-}
-
 function createBoard(){
     // create board tiles
     let mulitplyTilesArr = new Array(boardAdjuster['boardSize'] * boardAdjuster['boardSize'])
     for (let i = 0; i < mulitplyTilesArr.length; i++){
-        newTile = document.createElement('div');
-        newTile.id = i;
-        newTile.className = "board-tile";
+        newTile = document.createElement('div')
+        newTile.id = i
+        newTile.className = "board-tile"
         newTile.style.minHeight = `${boardAdjuster['min-size']}%`
         newTile.style.minWidth = `${boardAdjuster['min-size']}%`
         board.appendChild(newTile)
@@ -210,20 +213,22 @@ function chosenTiles(){
 }
 
 function countdown(seconds){
-    countdownTimer.showModal();
+    countdownTimer.showModal()
     countdownTimer.innerText = "READY"
     countdownTimerID = setInterval(function(){
         countdownTimer.innerText = seconds
-        seconds--;
+        seconds--
         if (seconds < 0){
-            clearInterval(countdownTimerID);
-            countdownTimer.close();
-            addZTile(board);
-            timer(14);
+            clearInterval(countdownTimerID)
+            countdownTimer.close()
+            addZTile(board)
+            timer(14)
             return
         }
     }, 1000)
 }
+
+ // functions for updating state 
 
 function timer(seconds){
     timeoutID = setInterval(function(){
@@ -231,9 +236,9 @@ function timer(seconds){
             clearInterval(timeoutID)
         } else {
             gameTimer.innerHTML = `00 : ${seconds >= 10  ? seconds : '0' + seconds}` 
-            seconds--;
+            seconds--
             if (seconds < 0){
-                clearInterval(timeoutID);
+                clearInterval(timeoutID)
                 gameTimer.innerHTML = '00 : 00'
 
                 // only checkWin() if player hasnt lost yet
@@ -246,6 +251,41 @@ function timer(seconds){
 function addZTile(element){
     for(let i=0; i < element.children.length; i++){
         element.children[i].classList.add("z-tile")
+    }
+}
+
+function render(){
+    totalCorrect.innerHTML = `${correctChoice}`
+    guesses.innerHTML = `${guessCount}`
+    checkWin()
+}
+
+function checkWin(){
+    // Wins
+    if(correctChoice === totalTileDenominator){
+        score += 1
+        playerScore.innerText = `${score}`
+        resultModal.showModal()
+        resultModal.style.display = "flex"
+        resultModal.innerHTML = `<h2>You WIN!</h2><h3>  Player Score : ${score}<br> Time remaining : ${gameTimer.innerHTML}</h3>`
+        removeZTile(board)
+
+        // activate nextLevelButton
+        nextLevelButton.disabled = false
+        nextLevelButton.style.opacity = "1"
+        nextLevelButton.classList.add("flashing")
+        return
+    }
+    // Losses 
+    if((guessCount === 0 && correctChoice !== totalTileDenominator) || gameTimer.innerHTML === '00 : 00'){
+        resultModal.showModal()
+        resultModal.style.display = "flex"
+        resultModal.innerHTML = `<h2>You Lose!</h2>`
+
+        // remove remaining hidden tiles and highlight the leftover tiles needed
+        removeZTile(board)
+        showRemainderTiles()
+        return
     }
 }
 
@@ -262,29 +302,3 @@ function showRemainderTiles(){
         }
     }
 }
-
-function checkWin(){
-    // Wins
-    if(correctChoice === totalTileDenominator){
-        score += 1
-        playerScore.innerText = `${score}`
-        resultModal.showModal()
-        resultModal.style.display = "flex"
-        resultModal.innerHTML = `<h2>You WIN!</h2><h3>  Player Score : ${score}<br> Time remaining : ${gameTimer.innerHTML}</h3>`
-        removeZTile(board)
-        nextLevelButton.disabled = false
-        nextLevelButton.style.opacity = "1"
-        nextLevelButton.classList.add("flashing")
-        return
-    }
-    // Losses 
-    if((guessCount === 0 && correctChoice !== totalTileDenominator) || gameTimer.innerHTML === '00 : 00'){
-        showRemainderTiles()
-        resultModal.showModal()
-        resultModal.style.display = "flex"
-        resultModal.innerHTML = `<h2>You Lose!</h2>`;
-        removeZTile(board)
-        return
-    }
-}
-
