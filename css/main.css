@@ -3,6 +3,7 @@ html, body {
     width: 100%;
     padding: 0;
     margin: 0;
+    color: #d4896a;
 }
 
 /* Intro Screen  */
@@ -12,9 +13,10 @@ html, body {
     flex-direction: column;
     align-items: center;
     justify-content: space-around;
+    background-color: #503c52;
 }
 
-.intro-screen > select{
+.intro-screen > select{ 
     width: 40vh;
     font-size: large;
 }
@@ -23,10 +25,14 @@ html, body {
     padding: 20px;
     width: 300px;
     visibility: hidden;
+    border-radius: 5%;
+    color: #d4896a;
+    background-color: #262335;
 }
 
 .instructions{
     flex-wrap: wrap;
+    font-size: large;
 }
 
 
@@ -38,7 +44,7 @@ body{
 
 .header{
     height: 75px;
-    background: #239875;
+    background: #262335;
     display: flex;
     justify-content: space-evenly;
     align-items: center;
@@ -61,7 +67,7 @@ body{
     display: none;
     flex-direction: column;
     justify-content: space-around;
-    background-color: rgb(164,224,219);
+    background-color: #503c52;
 }
 
 .game-box{
@@ -89,7 +95,7 @@ body{
 }
 
 .chosen{
-    background-color: blue;
+    background-color: #ffbb6c;
 }
 
 .remaining-tiles{
@@ -98,13 +104,13 @@ body{
 
 @keyframes blinker{
     50%{
-        background-color: red;
+        background-color: #9f6c66;
     }
 }
 
 
 .z-tile{
-    background-color: rgb(154, 153, 153);
+    background-color: #9f6c66;
 }
 
 .button-box{
@@ -117,14 +123,13 @@ body{
 .try-again, .next-level{
     width: 15vh;
     border-radius: 9%;
-}
-
-.try-again{
-    background-color: red;
+    background-color: #262335;
+    color: #d4896a;
+    font-weight: 800;
 }
 
 .flashing{
-    animation: flashing 1s step-start  infinite  ;
+    animation: flashing 1.5s step-start  infinite  ;
 }
 
 @keyframes flashing {
@@ -135,7 +140,7 @@ body{
 
 .footer{
     height: 30px;
-    background-color: #239875
+    background-color: #262335;
 }
 
 .timer, .guesses, .correct-choice, .countdown-timer, .level{
