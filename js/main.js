@@ -28,7 +28,7 @@ const boardLevels = [
         'boardSize': 8,
         'min-size': 12.5,
         'maxGuesses': 30,
-        'level': 'hardest'
+        'level': 'impossible'
     }
 ]
 
@@ -60,6 +60,7 @@ const tryAgainButton = document.querySelector(".try-again");
 const nextLevelButton = document.querySelector(".next-level");
 const playerScore = document.querySelector(".header-score span");
 const playerName = document.querySelector(".header > p span")
+const level = document.querySelector(".level")
 
 
 
@@ -133,6 +134,8 @@ function handleNextLevel(){
     clearInterval(timeoutID)
     correctChoice = 0
     boardAdjuster = boardLevels[num]
+    nextLevelButton.disabled = true
+    nextLevelButton.classList.remove("flashing")
     init()
     render()
 }
@@ -144,6 +147,7 @@ function init(){
     guesses.innerHTML = `${guessCount}`
     gameTimer.innerHTML = '00 : 15'
     totalCorrect.innerHTML = 0
+    level.innerHTML = `<p>Level <br>${num} <br> (${boardAdjuster.level.toUpperCase()})</p>`
     playerScore.innerText = `${score}`
     countdown(3)
 }
@@ -265,8 +269,10 @@ function checkWin(){
         playerScore.innerText = `${score}`
         resultModal.showModal()
         resultModal.style.display = "flex"
-        resultModal.innerHTML = `<h2>You WIN! You had ${guessCount === 1 ?  guessCount + ' guess ' : guessCount + ' guesses ' }left too! </h2><h3> Time remaining : ${gameTimer.innerHTML}</h3>`
+        resultModal.innerHTML = `<h2>You WIN!</h2><h3>  Player Score : ${score}<br> Time remaining : ${gameTimer.innerHTML}</h3>`
         removeZTile(board)
+        nextLevelButton.disabled = false
+        nextLevelButton.classList.add('flashing')
         return
     }
     // Losses 

@@ -93,13 +93,12 @@ body{
 }
 
 .remaining-tiles{
-    outline: 2px solid red;
     animation: blinker 1s step-start infinite;
 }
 
 @keyframes blinker{
     50%{
-        opacity: 0.85;
+        background-color: red;
     }
 }
 
@@ -112,6 +111,26 @@ body{
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
+    height: 40px;
+}
+
+.try-again, .next-level{
+    width: 15vh;
+    border-radius: 9%;
+}
+
+.try-again{
+    background-color: red;
+}
+
+.flashing{
+    animation: flashing 1s step-start  infinite  ;
+}
+
+@keyframes flashing {
+    50%{
+        background-color: green;
+    }
 }
 
 .footer{
@@ -119,11 +138,21 @@ body{
     background-color: #239875
 }
 
-.timer, .guesses, .correct-choice, .countdown-timer{
+.timer, .guesses, .correct-choice, .countdown-timer, .level{
     font-size: x-large;
     font-weight: 600;
     width: 100px;
     text-align: center;
+}
+
+.timer, .level, .guesses, .correct-choice{
+    margin: 0px 40px;
+}
+
+.side-box{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
 }
 
 .countdown-timer{
