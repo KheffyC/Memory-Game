@@ -135,6 +135,7 @@ function handleNextLevel(){
     correctChoice = 0
     boardAdjuster = boardLevels[num]
     nextLevelButton.disabled = true
+    nextLevelButton.style.opacity = "0.5"
     nextLevelButton.classList.remove("flashing")
     init()
     render()
@@ -272,7 +273,8 @@ function checkWin(){
         resultModal.innerHTML = `<h2>You WIN!</h2><h3>  Player Score : ${score}<br> Time remaining : ${gameTimer.innerHTML}</h3>`
         removeZTile(board)
         nextLevelButton.disabled = false
-        nextLevelButton.classList.add('flashing')
+        nextLevelButton.style.opacity = "1"
+        nextLevelButton.classList.add("flashing")
         return
     }
     // Losses 
