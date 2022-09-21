@@ -94,16 +94,22 @@ function handleName(e){
 
 function handleDropdown(){
      startButton.style.visibility = "visible"
-     if(dropdown.value === 'easy'){
-        num = 0
-     } else if (dropdown.value === 'medium'){
-        num = 1
-     } else if (dropdown.value === 'hard'){
-        num = 2
-     } else if (dropdown.value === 'hardest'){
-        num = 3
-     } else if (dropdown.value === 'impossible'){
-        num = 4
+     switch(dropdown.value){
+        case 'easy':
+            num = 0;
+            break;
+        case 'medium':
+            num = 1;
+            break;
+        case 'hard':
+            num = 2;
+            break;
+        case 'hardest':
+            num = 3;
+            break;
+        case 'impossible':
+            num = 4;
+            break;
      }
      boardAdjuster = boardLevels[num]
      dropdown.disabled = true
@@ -118,7 +124,6 @@ function handlePlayerClick(e){
     if(!list.contains("z-tile")) return
 
     // remove z-tile and update guesses/correct answers 
-
     if(list.contains("chosen") && list.contains("z-tile")){
         list.add("correct")
         list.remove("z-tile")
@@ -141,27 +146,29 @@ function handleModal(e){
 }
 
 function handleTryAgain(){
+    // clear board and disable nextButton if enabled
     board.replaceChildren()
     clearInterval(timeoutID)
     correctChoice = 0
+    disableNextButton()
+
+    // run new game with same tile board
     init()
     render()
 }
 
 function handleNextLevel(){
-    // loop levels back to the beginning 
-    num === 4 ? num = 0 : num += 1
-
     //clear board
     board.replaceChildren()
     clearInterval(timeoutID)
     correctChoice = 0
+    
+    // loop back to first board if at highest level, else move to next level
+    num === 4 ? num = 0 : num += 1
     boardAdjuster = boardLevels[num]
 
     // return nextLevelButton to disabled
-    nextLevelButton.disabled = true
-    nextLevelButton.style.opacity = "0.5"
-    nextLevelButton.classList.remove("flashing")
+    disableNextButton()
     init()
     render()
 }
@@ -301,4 +308,10 @@ function showRemainderTiles(){
             child.classList.add("remaining-tiles")
         }
     }
+}
+
+function disableNextButton(){
+    nextLevelButton.disabled = true
+    nextLevelButton.style.opacity = "0.5"
+    nextLevelButton.classList.remove("flashing")
 }
