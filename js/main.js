@@ -75,7 +75,7 @@ nextLevelButton.addEventListener('click', handleNextLevel)
 
 /*----- functions -----*/
 function handleName(e){
-    playerName.innerText = e.target.value
+    playerName.innerHTML = `<strong>${e.target.value}</strong>`
     enterName.disabled = true
     difficulty.style.visibility = "visible"
 }
@@ -93,15 +93,13 @@ function handlePlayerClick(e){
     let list = e.target.classList;
     
     // return statements
-    if (guessCount === 0 || gameTimer.innerHTML === '00 : 00'){
-        showRemainderTiles()
-    }
+    if (guessCount === 0) return
     if(!list.contains("z-tile")) return
 
     // remove z-tile and update guesses/correct answers 
 
     if(list.contains("chosen") && list.contains("z-tile")){
-        // e.target.style.backgroundColor = "purple"
+        list.add("correct")
         list.remove("z-tile")
         correctChoice += 1
         guessCount -= 1
@@ -253,8 +251,10 @@ function removeZTile(element){
 }
 
 function showRemainderTiles(){
-    for (child of board.children){
-        console.log(child)
+    for(let child of board.children){
+        if(child.classList.contains("chosen") && !child.classList.contains("correct")){
+            child.classList.add("remaining-tiles")
+        }
     }
 }
 
@@ -271,6 +271,7 @@ function checkWin(){
     }
     // Losses 
     if((guessCount === 0 && correctChoice !== totalTileDenominator) || gameTimer.innerHTML === '00 : 00'){
+        showRemainderTiles()
         resultModal.showModal()
         resultModal.style.display = "flex"
         resultModal.innerHTML = `<h2>You Lose!</h2>`;

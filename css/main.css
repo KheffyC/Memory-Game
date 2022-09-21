@@ -92,6 +92,18 @@ body{
     background-color: blue;
 }
 
+.remaining-tiles{
+    outline: 2px solid red;
+    animation: blinker 1s step-start infinite;
+}
+
+@keyframes blinker{
+    50%{
+        opacity: 0.85;
+    }
+}
+
+
 .z-tile{
     background-color: rgb(154, 153, 153);
 }
