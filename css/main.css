@@ -145,6 +145,14 @@ body{
 .footer{
     height: 30px;
     background-color: #262335;
+    text-align: center;
+}
+
+.footer a{
+    text-decoration: none;
+    outline: none;
+    color: #d4896a;
+    font-size: 19px;
 }
 
 .timer, .guesses, .correct-choice, .countdown-timer, .level{
