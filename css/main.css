@@ -183,21 +183,6 @@ body{
     align-items: center;
 }
 
-.close{  
-    color: red;
-    align-self: start;
-    margin-left: 10px;
-    font-size: x-small;
-    cursor: pointer;
-    border: 1.5px solid red;
-    padding: 0px 10px;
-}
-
-.close:hover{
-    border: 1px solid red;  
-}
-
-
 @media only screen and (max-width: 420px){
     .side-box{
         margin: 0px -5px;
